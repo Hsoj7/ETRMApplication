@@ -52,7 +52,7 @@ public class HibernateUtil {
             } else {
                 throw new RuntimeException("db.password property not found in dbconfig.properties");
             }
-
+            
 
             // Build SessionFactory
             return configuration.buildSessionFactory();

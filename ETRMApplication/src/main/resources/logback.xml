@@ -1,0 +1,12 @@
+<configuration>
+    <!-- Other configurations -->
+    
+    <!-- Hibernate logger -->
+    <logger name="org.hibernate" level="WARN" />
+    <logger name="org.hibernate.SQL" level="OFF" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="OFF" />
+    <logger name="org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl" level="OFF" />
+    <logger name="org.hibernate.cfg.Environment" level="OFF" />
+    
+    <!-- Other loggers -->
+</configuration>

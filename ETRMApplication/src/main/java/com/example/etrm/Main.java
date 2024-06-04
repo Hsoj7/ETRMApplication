@@ -9,12 +9,19 @@ package com.example.etrm;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("Hello");
+		System.out.println("Establishing Connection...");
 		TradeService ts = new TradeService();
+		System.out.println("Connected.");
+
 		
 		Trade trade = ts.getTrade(26);
 		
+		System.out.println("Your Trade:");
 		System.out.println(trade.toString());
+		
+		
+		
+		
 		
 		
 //		Trade trade = new Trade(1, "2024-05-29", "Gas", 526.32, 30.68, "NuVista");

@@ -13,7 +13,6 @@ public class TradeService {
     public TradeService() {
 //        sessionFactory = new Configuration().configure().buildSessionFactory();
         this.sessionFactory = HibernateUtil.getSessionFactory();
-
     }
 
     public Trade getTrade(int id) {
