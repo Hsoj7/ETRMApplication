@@ -7,10 +7,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * This class provides util functions for the Hibernate Object Relational Mapping (ORM)
+ */
 public class HibernateUtil {
-
+//	The SessionFactory object
     private static final SessionFactory sessionFactory = buildSessionFactory();
 
+    /**
+     * Method to build and set the SessionFactory object
+     * Calls dbconfig to get local database connection details
+     */
     private static SessionFactory buildSessionFactory() {
         try {
             // Create Configuration instance from hibernate.cfg.xml
@@ -23,8 +30,7 @@ public class HibernateUtil {
             dbProperties.load(inputStream);
             inputStream.close();
 
-//            System.out.println(dbProperties.getProperty("db.driver"));
-            // Set properties to Hibernate Configuration
+            // Set properties for Hibernate Configuration
             String driverClass = dbProperties.getProperty("db.driver");
             if (driverClass != null) {
                 configuration.setProperty("hibernate.connection.driver_class", driverClass);
@@ -53,7 +59,6 @@ public class HibernateUtil {
                 throw new RuntimeException("db.password property not found in dbconfig.properties");
             }
             
-
             // Build SessionFactory
             return configuration.buildSessionFactory();
         } catch (IOException ex) {
@@ -62,10 +67,16 @@ public class HibernateUtil {
         }
     }
 
+    /**
+     * Returns the SessionFactory
+     */
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
+    /**
+     * Terminates the SessionFactory
+     */
     public static void shutdown() {
         getSessionFactory().close();
     }

@@ -39,8 +39,48 @@ public class Trade {
 	@Column(name = "counterparty")
     private String counterparty;
     
-    /**
-     * Constructs a Trade object with the specified attributes.
+    
+	/**
+     * Empty constructor needed for SessionFactory class
+     * 
+     */
+	public Trade(){
+		
+	}
+	
+	/**
+     * Constructs a Trade object without an id field - used for creating new trades from the command line
+     * 
+     * @param tradeDate     The date of the trade.
+     * @param commodityType The type of commodity traded.
+     * @param quantity      The quantity of the trade.
+     * @param price         The price per unit of the commodity.
+     * @param counterparty  The counterparty involved in the trade.
+     */
+	public Trade(String tradeDate, String commodityType, double quantity, double price, String counterparty){
+    	if (tradeDate == null || tradeDate.isEmpty()) {
+            throw new IllegalArgumentException("Trade date cannot be null or empty");
+        }
+        if (commodityType == null || commodityType.isEmpty()) {
+            throw new IllegalArgumentException("Commodity type cannot be null or empty");
+        }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
+        if (price <= 0) {
+            throw new IllegalArgumentException("Price must be greater than zero");
+        }
+
+        this.id = 0;
+        this.tradeDate = tradeDate;
+        this.commodityType = commodityType;
+        this.quantity = quantity;
+        this.price = price;
+        this.counterparty = counterparty;
+    }
+	
+	/**
+     * Constructs a Trade object including the ID field - used for reading from existing trades
      * 
      * @param id            The identifier of the trade.
      * @param tradeDate     The date of the trade.
@@ -49,12 +89,6 @@ public class Trade {
      * @param price         The price per unit of the commodity.
      * @param counterparty  The counterparty involved in the trade.
      */
-	
-	public Trade(){
-		
-	}
-	
-	
     public Trade(int id, String tradeDate, String commodityType, double quantity, double price, String counterparty){
     	if (tradeDate == null || tradeDate.isEmpty()) {
             throw new IllegalArgumentException("Trade date cannot be null or empty");
@@ -75,6 +109,76 @@ public class Trade {
         this.quantity = quantity;
         this.price = price;
         this.counterparty = counterparty;
+    }
+    
+    /**
+     * Sets a new trade date
+     */
+    public void setTradeDate(String date){
+    	this.tradeDate = date;
+    }
+    
+    /**
+     * Sets a new commodity type
+     */
+    public void setCommodityType(String commodity){
+    	this.commodityType = commodity;
+    }
+    
+    /**
+     * Sets a new quantity
+     */
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    /**
+     * Sets a new price
+     */
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    /**
+     * Sets a new counterparty
+     */
+    public void setCounterparty(String counterparty) {
+        this.counterparty = counterparty;
+    }
+    
+    /**
+     * Gets the trade date
+     */
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    /**
+     * Gets the commodity type
+     */
+    public String getCommodityType() {
+        return commodityType;
+    }
+
+    /**
+     * Gets the quantity
+     */
+    public double getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * Gets the price
+     */
+    public double getPrice() {
+        return price;
+    }
+
+    /**
+     * Gets the counterparty
+     */
+    public String getCounterparty() {
+        return counterparty;
     }
     
     /**
