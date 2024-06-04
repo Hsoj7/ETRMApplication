@@ -12,12 +12,12 @@ Financial risk - clients defaulting on credit
 Operational risk - mitigating any human errors
 We’re tracking all this risk within the system to mitigate any problems before it’s too late
 
-# How is ETRM used in an organization?
+## How is ETRM used in an organization?
 For big companies, they might have 100+, 1000+ ongoing trades at any time. Previously, all trade data would be kept in some form of spreadsheet, not accessible by everyone in the company. ETRM systems give everyone in the company the ability to see all risks among all trades at any given point.
 For smaller companies, even in the start-up phase, they might need financing for trading operations and lenders want a full audit of risk of open positions. Margin is a bitch.
 At the end of the day, they’re useful for data quality, realtime reporting, quarterly reporting, and most importantly managing risks.
 
-# ETRM vs. CTRM
+## ETRM vs. CTRM
 CTRM is any commodity, ETRM is specifically energy. ETRM is a subset of CTRM
 
 
@@ -40,21 +40,21 @@ Version Control: GitHub
 Charting Library: JFreeChart (optional, for reporting)
 
 # Modules Description
-# 0. Setup
+## 0. Setup
 Objective: To setup the environment with tools needed for development.
 Implementation Steps:
 Github: Initialize a remote repository for version control.
 Database: Initialize the database environment and have it listen on a local port. Create a ‘trades’ table and populate it with data.
 Test: use Main.java to ensure everything is setup and running.
 
-# 1. Trade Class
+## 1. Trade Class
 Objective: To hold trade data within the program. 
 Implementation Steps:
 Entity Class: Define the Trade class including constructor and relevant methods.
 Service Layer: Implement a TradeService class for business logic and interaction with the database. Implement CRUD operations using Object-Relational Mapping (ORM).
 ORM: Use Hibernate, an ORM (object-relational mapping) tool for all CRUD operations of the TradeService class
 
-# 2. Trade Valuation
+## 2. Trade Valuation
 Objective: To implement valuation models for different types of trades.
 Valuation Models:
 Spot Trade Valuation:
@@ -65,7 +65,7 @@ Implementation Steps:
 Valuation Service: Create a ValuationService class to handle trade valuations.
 Integration: Integrate the valuation logic within the trade capture process to provide real-time valuation.
 
-# 3. Risk Management
+## 3. Risk Management
 Objective: To develop risk metrics like Value at Risk (VaR) and position limits.
 Risk Metrics:
 Value at Risk (VaR): Estimate potential loss over a specified period at a given confidence level.
@@ -74,10 +74,10 @@ Implementation Steps:
 Risk Management Service: Develop a RiskManagementService class to calculate and monitor risk metrics.
 Integration: Integrate risk calculations with trade capture and valuation processes.
 
-# 4. Reporting
+## 4. Reporting
 Objective: To generate reports on trade positions, profit and loss (P&L), and risk metrics.
 
-# Project Phases
+## Project Phases
 Phase 1: Trade Capture
 Set up project structure and dependencies.
 Implement trade capture module.
@@ -91,7 +91,7 @@ Phase 4: Reporting
 Implement reporting functionality.
 Generate sample reports and integrate with UI.
 
-# Future Enhancements
+## Future Enhancements
 Options Pricing: Extend the system to handle options trading and implement the Black-Scholes model.
 Advanced Risk Metrics: Incorporate more sophisticated risk management techniques.
 Enhanced UI: Develop a more user-friendly interface with advanced filtering and sorting options.
