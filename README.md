@@ -2,7 +2,7 @@
 
 # Background
 
-# What is ETRM?
+## What is ETRM?
 Energy/commodities trading & risk management systems
 Systems bought by physical commodities trading firms & suppliers as well, could be miners, or oil explorers, etc.
 It is a risk repository of any risk you might encounter when making trades. Risks include:
