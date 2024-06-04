@@ -20,11 +20,7 @@ At the end of the day, they’re useful for data quality, realtime reporting, qu
 # ETRM vs. CTRM
 CTRM is any commodity, ETRM is specifically energy. ETRM is a subset of CTRM
 
-# ETRM System & Accounting System
-Both hold:
-Transaction data (trades, receipts, disbursements, operational data, etc.)
-Reference data (customers, strategies, books, locations, new account codes, bank accounts)
-Using both we can get output documents (reports, invoices, contracts, stock reports, debtor and creditor, etc.), PnL, and more.
+
 
 # Introduction
 This document outlines the development of a simplified Energy Trading and Risk Management (ETRM) system. The system will consist of modules for trade capture, trade valuation, risk management, and reporting. The initial phase will focus on basic functionality with potential for future expansion, including options trading.
