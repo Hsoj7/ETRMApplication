@@ -72,4 +72,19 @@ public class FuturesTrade extends Trade {
     public void setDaysToSettlement(int daysToSettlement) {
         this.daysToSettlement = daysToSettlement;
     }
+    
+    @Override
+    public String toString() {
+        return "FuturesTrade{" +
+                "id=" + this.getId() +
+                ", tradeType='" + this.getTradeType() + '\'' +
+                ", tradeDate='" + this.getTradeDate() + '\'' +
+                ", commodityType='" + this.getCommodityType() + '\'' +
+                ", counterparty='" + this.getCounterparty() + '\'' +
+                ", quantity=" + this.quantity +
+                ", price=" + this.price +
+                ", discountRate=" + this.discountRate +
+                ", daysToSettlement=" + this.daysToSettlement +
+                '}';
+    }
 }

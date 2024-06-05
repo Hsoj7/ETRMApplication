@@ -12,11 +12,25 @@ public class Main {
 		System.out.println("Connected.");
 		
 		
-//		update getTrade(), getMostRecentTrade(), getAllTrades(), updateTrade(), deleteTrade()
+//		finish getAllTrades(), updateTrade(), deleteTrade()
+//		then implement ValuationService
+//		then add a bunch of fake data
+		
+//		TESTING GET MOST RECENT TRADE FOR SPOT AND FUTURES
+		Trade trade = ts.getMostRecentTrade();
+		System.out.println(trade.toString());
+		
+		
+//		TESTING GET TRADES FOR SPOT AND FUTURES
+//		SpotTrade spot = ts.getSpotTrade(1);
+//		System.out.println(spot.toString());
+//		
+//		FuturesTrade fut = ts.getFuturesTrade(5);
+//		System.out.println(spot.toString());
 		
 		
 //		TESTING SAVE FOR SPOT AND FUTURES
-//        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+//        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-05", "Oil", "Counterparty A", 72.23, 325);
 //        ts.saveTrade(spotTrade);
 //        FuturesTrade futuresTrade = new FuturesTrade(TradeType.FUTURES, "2023-06-05", "Petroleum", "Counterparty B", 80.0, 750, 0.05, 30);
 //        ts.saveTrade(futuresTrade);

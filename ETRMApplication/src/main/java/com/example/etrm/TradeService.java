@@ -54,8 +54,9 @@ public class TradeService {
     }
     
     /**
-     * Returns a Trade from the database
-     * @param id The id of the trade to get
+     * Returns a SpotTrade from the database
+     * @param id        	The id of the trade to get
+     * @return SpotTrade 	The SpotTrade object representing the matching row
      */
     public Trade getTrade(int id) {
         try (Session session = sessionFactory.openSession()) {
@@ -64,41 +65,67 @@ public class TradeService {
     }
     
     /**
+     * Returns a SpotTrade from the database
+     * @param id        	The id of the trade to get
+     * @return SpotTrade 	The SpotTrade object representing the matching row
+     */
+    public SpotTrade getSpotTrade(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(SpotTrade.class, id);
+        }
+    }
+
+    /**
+     * Returns a FuturesTrade from the database
+     * @param id        	The id of the trade to get
+     * @return FuturesTrade The FuturesTrade object representing the matching row
+     */
+    public FuturesTrade getFuturesTrade(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(FuturesTrade.class, id);
+        }
+    }
+
+    
+    /**
      * Gets the most recently inserted trade from the db
      * @return	the Trade object representing the row most recently inserted
+     * Not working since updating structure to trades as parent table and spot_trades/futures_trades as children
      */
-    public Trade getMostRecentTrade() {
-        Trade mostRecentTrade = null;
-
-        try (Session session = sessionFactory.openSession()) {
-            // Start the transaction
-            Transaction transaction = session.beginTransaction();
-
-            try {
-                // Get the last inserted ID
-                NativeQuery<Integer> idQuery = session.createNativeQuery("SELECT LAST_INSERT_ID()");
-                Integer lastInsertedId = ((Number) idQuery.uniqueResult()).intValue();
-
-                if (lastInsertedId != null) {
-                    // Retrieve the trade with the last inserted ID using the existing method
-                    mostRecentTrade = getTrade(lastInsertedId);
-                }
-
-                // Commit the transaction
-                transaction.commit();
-            } catch (Exception e) {
-                // Rollback the transaction in case of an error
-                if (transaction != null) {
-                    transaction.rollback();
-                }
-                throw e;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return mostRecentTrade;
-    }
+//    public Trade getMostRecentTrade() {
+//        Trade mostRecentTrade = null;
+//
+//        try (Session session = sessionFactory.openSession()) {
+//            // Start the transaction
+//            Transaction transaction = session.beginTransaction();
+//
+//            try {
+//                // Get the last inserted ID
+//                NativeQuery<Integer> idQuery = session.createNativeQuery("SELECT LAST_INSERT_ID()");
+//                System.out.println(idQuery.uniqueResult());
+////                casting 
+//                Integer lastInsertedId = ((Number) idQuery.uniqueResult()).intValue();
+//
+//                if (lastInsertedId != null) {
+//                    // Retrieve the trade with the last inserted ID using the existing method
+//                    mostRecentTrade = getTrade(lastInsertedId);
+//                }
+//
+//                // Commit the transaction
+//                transaction.commit();
+//            } catch (Exception e) {
+//                // Rollback the transaction in case of an error
+//                if (transaction != null) {
+//                    transaction.rollback();
+//                }
+//                throw e;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return mostRecentTrade;
+//    }
 
     /**
      * Returns a list of all trades from the database

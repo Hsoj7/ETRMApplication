@@ -213,15 +213,14 @@ public class Trade {
 //    	return summary;
 //    }
 //    
-//    @Override
-//    public String toString() {
-//        return "Trade{" +
-//                "id=" + id +
-//                ", tradeDate='" + tradeDate + '\'' +
-//                ", commodityType='" + commodityType + '\'' +
-//                ", quantity=" + quantity +
-//                ", price=" + price +
-//                ", counterparty='" + counterparty + '\'' +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "id=" + id +
+                ", tradeType='" + tradeType + '\'' +
+                ", tradeDate='" + tradeDate + '\'' +
+                ", commodityType='" + commodityType + '\'' +
+                ", counterparty='" + counterparty + '\'' +
+                '}';
+    }
 }

@@ -46,5 +46,18 @@ public class SpotTrade extends Trade {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+    
+  @Override
+  public String toString() {
+      return "SpotTrade{" +
+              "id=" + this.getId() +
+              ", tradeType='" + this.getTradeType() + '\'' +
+              ", tradeDate='" + this.getTradeDate() + '\'' +
+              ", commodityType='" + this.getCommodityType() + '\'' +
+              ", counterparty='" + this.getCounterparty() + '\'' +
+              ", quantity=" + this.quantity +
+              ", price=" + this.price +
+              '}';
+  }
 }
 
