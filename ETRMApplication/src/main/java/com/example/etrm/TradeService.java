@@ -3,6 +3,9 @@ package com.example.etrm;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
+
+import com.mysql.cj.Query;
 
 import java.util.List;
 
@@ -39,6 +42,44 @@ public class TradeService {
             return session.get(Trade.class, id);
         }
     }
+    
+    /**
+     * Gets the most recently inserted trade from the db
+     * @return	the Trade object representing the row most recently inserted
+     */
+    public Trade getMostRecentTrade() {
+        Trade mostRecentTrade = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            // Start the transaction
+            Transaction transaction = session.beginTransaction();
+
+            try {
+                // Get the last inserted ID
+                NativeQuery<Integer> idQuery = session.createNativeQuery("SELECT LAST_INSERT_ID()");
+                Integer lastInsertedId = ((Number) idQuery.uniqueResult()).intValue();
+
+                if (lastInsertedId != null) {
+                    // Retrieve the trade with the last inserted ID using the existing method
+                    mostRecentTrade = getTrade(lastInsertedId);
+                }
+
+                // Commit the transaction
+                transaction.commit();
+            } catch (Exception e) {
+                // Rollback the transaction in case of an error
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mostRecentTrade;
+    }
+
 
     /**
      * Saves a Trade to the database

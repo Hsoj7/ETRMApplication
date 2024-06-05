@@ -10,6 +10,16 @@ public class Main {
 		System.out.println("Establishing Connection...");
 		TradeService ts = new TradeService();
 		System.out.println("Connected.");
+		
+		
+//		TESTING saveTrade()
+		Trade trade2 = new Trade("2024-06-05", "Gas", 671, 72.10, "My Company", TradeType.SPOT, 0, 0);
+		ts.saveTrade(trade2);
+		Trade retrieved = ts.getMostRecentTrade();
+		System.out.println("Trade2:");
+		System.out.println(retrieved.toString());
+		
+		
 
 //		TESTING getAllTrades()
 //		List<Trade> trades = ts.getAllTrades();
@@ -23,7 +33,7 @@ public class Main {
 		
 		
 //		TESTING deleteTrade()
-//		int tradeid = 182;
+//		int tradeid = 6;
 //		ts.deleteTrade(tradeid);
 		
 		
@@ -41,11 +51,7 @@ public class Main {
 //		System.out.println(trade.toString());
 		
 		
-//		TESTING saveTrade()
-		Trade trade2 = new Trade("2024-05-29", "Gas", 526.32, 30.68, "NuVista");
-		System.out.println("Trade2:");
-		System.out.println(trade2.toString());
-		ts.saveTrade(trade2);
+
 				
 		ts.close();
 		System.out.println("Program terminated");

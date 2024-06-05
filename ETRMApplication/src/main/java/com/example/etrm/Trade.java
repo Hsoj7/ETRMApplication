@@ -2,6 +2,8 @@ package com.example.etrm;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,11 +35,23 @@ public class Trade {
 	@Column(name = "amount")
     private double quantity;
 	
+//	Price reflects current price for Spot trades and the future price for Futures trades
 	@Column(name = "price")
     private double price;
 	
 	@Column(name = "counterparty")
     private String counterparty;
+	
+	@Enumerated(EnumType.STRING)
+    @Column(name = "trade_type")
+    private TradeType tradeType;
+
+    // Additional fields for futures trades:
+    @Column(name = "discount_rate")
+    private Double discountRate;
+    
+    @Column(name = "days_to_settlement")
+    private int daysToSettlement;
     
     
 	/**
@@ -57,7 +71,7 @@ public class Trade {
      * @param price         The price per unit of the commodity.
      * @param counterparty  The counterparty involved in the trade.
      */
-	public Trade(String tradeDate, String commodityType, double quantity, double price, String counterparty){
+	public Trade(String tradeDate, String commodityType, double quantity, double price, String counterparty, TradeType tradeType, double discountRate, int daysToSettlement){
     	if (tradeDate == null || tradeDate.isEmpty()) {
             throw new IllegalArgumentException("Trade date cannot be null or empty");
         }
@@ -77,6 +91,9 @@ public class Trade {
         this.quantity = quantity;
         this.price = price;
         this.counterparty = counterparty;
+        this.tradeType = tradeType;
+        this.discountRate = discountRate;
+        this.daysToSettlement = daysToSettlement;
     }
 	
 	/**
@@ -89,7 +106,7 @@ public class Trade {
      * @param price         The price per unit of the commodity.
      * @param counterparty  The counterparty involved in the trade.
      */
-    public Trade(int id, String tradeDate, String commodityType, double quantity, double price, String counterparty){
+    public Trade(int id, String tradeDate, String commodityType, double quantity, double price, String counterparty, TradeType tradeType, double discountRate, int daysToSettlement){
     	if (tradeDate == null || tradeDate.isEmpty()) {
             throw new IllegalArgumentException("Trade date cannot be null or empty");
         }
@@ -109,6 +126,9 @@ public class Trade {
         this.quantity = quantity;
         this.price = price;
         this.counterparty = counterparty;
+        this.tradeType = tradeType;
+        this.discountRate = discountRate;
+        this.daysToSettlement = daysToSettlement;
     }
     
     /**
@@ -144,6 +164,27 @@ public class Trade {
      */
     public void setCounterparty(String counterparty) {
         this.counterparty = counterparty;
+    }
+    
+    /**
+     * Sets a new trade type
+     */
+    public void setTradeType(TradeType tradeType) {
+        this.tradeType = tradeType;
+    }
+    
+    /**
+     * Sets a new discount rate
+     */
+    public void setDiscountRate(Double discountRate) {
+        this.discountRate = discountRate;
+    }
+    
+    /**
+     * Sets a new days to settlement
+     */
+    public void setDaysToSettlement(Integer daysToSettlement) {
+        this.daysToSettlement = daysToSettlement;
     }
     
     /**
@@ -187,6 +228,30 @@ public class Trade {
     public String getCounterparty() {
         return counterparty;
     }
+    
+    /**
+     * Gets the TradeType
+     */
+    public TradeType getTradeType() {
+        return tradeType;
+    }
+
+    /**
+     * Gets the discount rate
+     */
+    public Double getDiscountRate() {
+        return discountRate;
+    }
+    
+    /**
+     * Gets the days to settlement
+     */
+    public Integer getDaysToSettlement() {
+        return daysToSettlement;
+    }
+
+    
+    
     
     /**
      * Returns the trade summary as a formatted string.
