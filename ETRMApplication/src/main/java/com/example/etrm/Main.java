@@ -12,14 +12,14 @@ public class Main {
 		System.out.println("Connected.");
 
 //		TESTING getAllTrades()
-		List<Trade> trades = ts.getAllTrades();
-		
-		int startIndex = Math.max(0, trades.size() - 10);
-        List<Trade> lastTen = trades.subList(startIndex, trades.size());
-        
-        for(Trade trade : lastTen) {
-        	System.out.println(trade);
-        }
+//		List<Trade> trades = ts.getAllTrades();
+//		
+//		int startIndex = Math.max(0, trades.size() - 10);
+//        List<Trade> lastTen = trades.subList(startIndex, trades.size());
+//        
+//        for(Trade trade : lastTen) {
+//        	System.out.println(trade);
+//        }
 		
 		
 //		TESTING deleteTrade()
@@ -42,10 +42,10 @@ public class Main {
 		
 		
 //		TESTING saveTrade()
-//		Trade trade2 = new Trade("2024-05-29", "Gas", 526.32, 30.68, "NuVista");
-//		System.out.println("Trade2:");
-//		System.out.println(trade2.toString());
-//		ts.saveTrade(trade2);
+		Trade trade2 = new Trade("2024-05-29", "Gas", 526.32, 30.68, "NuVista");
+		System.out.println("Trade2:");
+		System.out.println(trade2.toString());
+		ts.saveTrade(trade2);
 				
 		ts.close();
 		System.out.println("Program terminated");

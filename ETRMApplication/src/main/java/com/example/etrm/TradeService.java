@@ -3,7 +3,6 @@ package com.example.etrm;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 import java.util.List;
 
@@ -12,29 +11,38 @@ import java.util.List;
  * It provides methods to Create, Read, Update, and Delete
  */
 public class TradeService {
-//	Hibernate's implementation for object mappings
+    // Hibernate's implementation for object mappings
     private SessionFactory sessionFactory;
 
     /**
-     * Constructs a SessionFactory object
+     * Constructs a TradeService object with the default SessionFactory
      */
     public TradeService() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
     }
 
     /**
+     * Constructs a TradeService object with a specified SessionFactory
+     * Give the option to pass a separate hibernate config file for testing - needed to accomodate H2 temp database
+     * @param sessionFactory The SessionFactory to be used by this TradeService
+     */
+    public TradeService(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    /**
      * Returns a Trade from the database
-     * @param id	The id of the trade to get
+     * @param id The id of the trade to get
      */
     public Trade getTrade(int id) {
         try (Session session = sessionFactory.openSession()) {
             return session.get(Trade.class, id);
         }
     }
-    
+
     /**
      * Saves a Trade to the database
-     * @param trade		The trade object to save to the DB
+     * @param trade The trade object to save to the DB
      */
     public void saveTrade(Trade trade) {
         Session session = sessionFactory.openSession();
@@ -63,7 +71,7 @@ public class TradeService {
 
     /**
      * Updates a trade based on primary key (id), creates a trade entry if none exist
-     * @param trade		the trade object with data to be updated
+     * @param trade the trade object with data to be updated
      */
     public void updateTrade(Trade trade) {
         Transaction transaction = null;
@@ -82,7 +90,7 @@ public class TradeService {
 
     /**
      * Deletes the target trade
-     * @param id	The id of the trade to delete
+     * @param id The id of the trade to delete
      */
     public void deleteTrade(int id) {
         Transaction transaction = null;
@@ -92,9 +100,8 @@ public class TradeService {
             if (trade != null) {
                 session.remove(trade);
                 System.out.println("Trade deleted.");
-            }
-            else {
-            	System.out.println("Trade not found.");
+            } else {
+                System.out.println("Trade not found.");
             }
             transaction.commit();
         } catch (Exception e) {

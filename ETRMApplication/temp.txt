@@ -1,0 +1,22 @@
+INSERT INTO trades (trade_date, commodity_type, amount, counterparty, price)
+VALUES
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Cenovus Energy', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Suncor Energy', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Imperial Oil', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Canadian Natural Resources', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Parkland Corporation', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'TC Energy Corp', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Pembina Pipeline', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Gibson Energy', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Arc Resources', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Cenovus Energy', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Suncor Energy', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Imperial Oil', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Canadian Natural Resources', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Parkland Corporation', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'TC Energy Corp', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Pembina Pipeline', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Gibson Energy', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Arc Resources', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Cenovus Energy', RAND() * 1000),
+    (DATE_ADD(CURDATE(), INTERVAL -RAND() * 1000 DAY), 'Gas', RAND() * 1000, 'Suncor Energy', RAND() * 1000);
