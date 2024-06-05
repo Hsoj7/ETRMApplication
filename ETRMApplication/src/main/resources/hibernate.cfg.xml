@@ -30,5 +30,7 @@
 
         <!-- Specify our mapping classes -->
         <mapping class="com.example.etrm.Trade"/>
+        <mapping class="com.example.etrm.SpotTrade"/>
+        <mapping class="com.example.etrm.FuturesTrade"/>
     </session-factory>
 </hibernate-configuration>

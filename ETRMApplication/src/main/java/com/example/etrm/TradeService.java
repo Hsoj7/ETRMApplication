@@ -34,6 +34,26 @@ public class TradeService {
     }
 
     /**
+     * Saves a Trade to the database
+     * @param trade The trade object to save to the DB
+     */
+    public void saveTrade(Trade trade) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.persist(trade);
+            tx.commit();
+            System.out.println("Trade saved.");
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+    
+    /**
      * Returns a Trade from the database
      * @param id The id of the trade to get
      */
@@ -78,27 +98,6 @@ public class TradeService {
         }
 
         return mostRecentTrade;
-    }
-
-
-    /**
-     * Saves a Trade to the database
-     * @param trade The trade object to save to the DB
-     */
-    public void saveTrade(Trade trade) {
-        Session session = sessionFactory.openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            session.persist(trade);
-            tx.commit();
-            System.out.println("Trade saved.");
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
     }
 
     /**

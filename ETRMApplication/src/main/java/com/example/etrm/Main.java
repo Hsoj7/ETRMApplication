@@ -12,12 +12,24 @@ public class Main {
 		System.out.println("Connected.");
 		
 		
+//		update getTrade(), getMostRecentTrade(), getAllTrades(), updateTrade(), deleteTrade()
+		
+		
+//		TESTING SAVE FOR SPOT AND FUTURES
+//        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+//        ts.saveTrade(spotTrade);
+//        FuturesTrade futuresTrade = new FuturesTrade(TradeType.FUTURES, "2023-06-05", "Petroleum", "Counterparty B", 80.0, 750, 0.05, 30);
+//        ts.saveTrade(futuresTrade);
+
+
+		
+		
 //		TESTING saveTrade()
-		Trade trade2 = new Trade("2024-06-05", "Gas", 671, 72.10, "My Company", TradeType.SPOT, 0, 0);
-		ts.saveTrade(trade2);
-		Trade retrieved = ts.getMostRecentTrade();
-		System.out.println("Trade2:");
-		System.out.println(retrieved.toString());
+//		Trade trade2 = new Trade("2024-06-05", "Gas", 671, 72.10, "My Company", TradeType.SPOT, 0, 0);
+//		ts.saveTrade(trade2);
+//		Trade retrieved = ts.getMostRecentTrade();
+//		System.out.println("Trade2:");
+//		System.out.println(retrieved.toString());
 		
 		
 

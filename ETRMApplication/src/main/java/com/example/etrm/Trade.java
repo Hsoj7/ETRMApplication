@@ -1,30 +1,22 @@
 package com.example.etrm;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
+import jakarta.persistence.*;
 
 /**
- * This class represents a Trade entity with its attributes.
- * It provides methods to manage trade information.
+ * This class represents a parent Trade entity with the common attributes
  */
 @Entity
 @Table(name = "trades")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Trade {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
     private int id;
+	
+	@Enumerated(EnumType.STRING)
+    @Column(name = "trade_type")
+    private TradeType tradeType;
 	
 	@Column(name = "trade_date")
     private String tradeDate;
@@ -32,26 +24,8 @@ public class Trade {
 	@Column(name = "commodity_type")
     private String commodityType;
 	
-	@Column(name = "amount")
-    private double quantity;
-	
-//	Price reflects current price for Spot trades and the future price for Futures trades
-	@Column(name = "price")
-    private double price;
-	
 	@Column(name = "counterparty")
     private String counterparty;
-	
-	@Enumerated(EnumType.STRING)
-    @Column(name = "trade_type")
-    private TradeType tradeType;
-
-    // Additional fields for futures trades:
-    @Column(name = "discount_rate")
-    private Double discountRate;
-    
-    @Column(name = "days_to_settlement")
-    private int daysToSettlement;
     
     
 	/**
@@ -63,6 +37,27 @@ public class Trade {
 	}
 	
 	/**
+     * Used to construct a Trade object without an id field - used for creating new trades from the command line
+     */
+	public Trade(TradeType tradeType, String tradeDate, String commodityType, String counterparty) {
+        this.tradeType = tradeType;
+        this.tradeDate = tradeDate;
+        this.commodityType = commodityType;
+        this.counterparty = counterparty;
+    }
+	
+	/**
+     * Used to construct a Trade object with an id field - used for reading from the db
+     */
+	public Trade(int id, TradeType tradeType, String tradeDate, String commodityType, String counterparty) {
+        this.id = id;
+		this.tradeType = tradeType;
+        this.tradeDate = tradeDate;
+        this.commodityType = commodityType;
+        this.counterparty = counterparty;
+    }
+	
+	/**
      * Constructs a Trade object without an id field - used for creating new trades from the command line
      * 
      * @param tradeDate     The date of the trade.
@@ -71,30 +66,30 @@ public class Trade {
      * @param price         The price per unit of the commodity.
      * @param counterparty  The counterparty involved in the trade.
      */
-	public Trade(String tradeDate, String commodityType, double quantity, double price, String counterparty, TradeType tradeType, double discountRate, int daysToSettlement){
-    	if (tradeDate == null || tradeDate.isEmpty()) {
-            throw new IllegalArgumentException("Trade date cannot be null or empty");
-        }
-        if (commodityType == null || commodityType.isEmpty()) {
-            throw new IllegalArgumentException("Commodity type cannot be null or empty");
-        }
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero");
-        }
-        if (price <= 0) {
-            throw new IllegalArgumentException("Price must be greater than zero");
-        }
-
-        this.id = 0;
-        this.tradeDate = tradeDate;
-        this.commodityType = commodityType;
-        this.quantity = quantity;
-        this.price = price;
-        this.counterparty = counterparty;
-        this.tradeType = tradeType;
-        this.discountRate = discountRate;
-        this.daysToSettlement = daysToSettlement;
-    }
+//	public Trade(String tradeDate, String commodityType, double quantity, double price, String counterparty, TradeType tradeType, double discountRate, int daysToSettlement){
+//    	if (tradeDate == null || tradeDate.isEmpty()) {
+//            throw new IllegalArgumentException("Trade date cannot be null or empty");
+//        }
+//        if (commodityType == null || commodityType.isEmpty()) {
+//            throw new IllegalArgumentException("Commodity type cannot be null or empty");
+//        }
+//        if (quantity <= 0) {
+//            throw new IllegalArgumentException("Quantity must be greater than zero");
+//        }
+//        if (price <= 0) {
+//            throw new IllegalArgumentException("Price must be greater than zero");
+//        }
+//
+//        this.id = 0;
+//        this.tradeDate = tradeDate;
+//        this.commodityType = commodityType;
+//        this.quantity = quantity;
+//        this.price = price;
+//        this.counterparty = counterparty;
+//        this.tradeType = tradeType;
+//        this.discountRate = discountRate;
+//        this.daysToSettlement = daysToSettlement;
+//    }
 	
 	/**
      * Constructs a Trade object including the ID field - used for reading from existing trades
@@ -106,30 +101,30 @@ public class Trade {
      * @param price         The price per unit of the commodity.
      * @param counterparty  The counterparty involved in the trade.
      */
-    public Trade(int id, String tradeDate, String commodityType, double quantity, double price, String counterparty, TradeType tradeType, double discountRate, int daysToSettlement){
-    	if (tradeDate == null || tradeDate.isEmpty()) {
-            throw new IllegalArgumentException("Trade date cannot be null or empty");
-        }
-        if (commodityType == null || commodityType.isEmpty()) {
-            throw new IllegalArgumentException("Commodity type cannot be null or empty");
-        }
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero");
-        }
-        if (price <= 0) {
-            throw new IllegalArgumentException("Price must be greater than zero");
-        }
-
-        this.id = id;
-        this.tradeDate = tradeDate;
-        this.commodityType = commodityType;
-        this.quantity = quantity;
-        this.price = price;
-        this.counterparty = counterparty;
-        this.tradeType = tradeType;
-        this.discountRate = discountRate;
-        this.daysToSettlement = daysToSettlement;
-    }
+//    public Trade(int id, String tradeDate, String commodityType, double quantity, double price, String counterparty, TradeType tradeType, double discountRate, int daysToSettlement){
+//    	if (tradeDate == null || tradeDate.isEmpty()) {
+//            throw new IllegalArgumentException("Trade date cannot be null or empty");
+//        }
+//        if (commodityType == null || commodityType.isEmpty()) {
+//            throw new IllegalArgumentException("Commodity type cannot be null or empty");
+//        }
+//        if (quantity <= 0) {
+//            throw new IllegalArgumentException("Quantity must be greater than zero");
+//        }
+//        if (price <= 0) {
+//            throw new IllegalArgumentException("Price must be greater than zero");
+//        }
+//
+//        this.id = id;
+//        this.tradeDate = tradeDate;
+//        this.commodityType = commodityType;
+//        this.quantity = quantity;
+//        this.price = price;
+//        this.counterparty = counterparty;
+//        this.tradeType = tradeType;
+//        this.discountRate = discountRate;
+//        this.daysToSettlement = daysToSettlement;
+//    }
     
     /**
      * Sets a new trade date
@@ -146,20 +141,6 @@ public class Trade {
     }
     
     /**
-     * Sets a new quantity
-     */
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
-
-    /**
-     * Sets a new price
-     */
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    /**
      * Sets a new counterparty
      */
     public void setCounterparty(String counterparty) {
@@ -171,20 +152,6 @@ public class Trade {
      */
     public void setTradeType(TradeType tradeType) {
         this.tradeType = tradeType;
-    }
-    
-    /**
-     * Sets a new discount rate
-     */
-    public void setDiscountRate(Double discountRate) {
-        this.discountRate = discountRate;
-    }
-    
-    /**
-     * Sets a new days to settlement
-     */
-    public void setDaysToSettlement(Integer daysToSettlement) {
-        this.daysToSettlement = daysToSettlement;
     }
     
     /**
@@ -209,20 +176,6 @@ public class Trade {
     }
 
     /**
-     * Gets the quantity
-     */
-    public double getQuantity() {
-        return quantity;
-    }
-
-    /**
-     * Gets the price
-     */
-    public double getPrice() {
-        return price;
-    }
-
-    /**
      * Gets the counterparty
      */
     public String getCounterparty() {
@@ -236,51 +189,39 @@ public class Trade {
         return tradeType;
     }
 
-    /**
-     * Gets the discount rate
-     */
-    public Double getDiscountRate() {
-        return discountRate;
-    }
-    
-    /**
-     * Gets the days to settlement
-     */
-    public Integer getDaysToSettlement() {
-        return daysToSettlement;
-    }
+
 
     
     
     
-    /**
-     * Returns the trade summary as a formatted string.
-     * 
-     * @return String representing the trade summary.
-     */
-    public String tradeSummary() {
-    	StringBuilder sb = new StringBuilder();
-    	sb.append("id: " + this.id  + "\n");
-    	sb.append("Trade Date: " + this.tradeDate  + "\n");
-    	sb.append("Commodity Type: " + this.commodityType  + "\n");
-    	sb.append("Quantity: " + this.quantity  + "\n");
-    	sb.append("Price: " + this.price  + "\n");
-    	sb.append("Counterparty: " + this.counterparty  + "\n");
-
-    	String summary = sb.toString();
-    	
-    	return summary;
-    }
-    
-    @Override
-    public String toString() {
-        return "Trade{" +
-                "id=" + id +
-                ", tradeDate='" + tradeDate + '\'' +
-                ", commodityType='" + commodityType + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", counterparty='" + counterparty + '\'' +
-                '}';
-    }
+//    /**
+//     * Returns the trade summary as a formatted string.
+//     * 
+//     * @return String representing the trade summary.
+//     */
+//    public String tradeSummary() {
+//    	StringBuilder sb = new StringBuilder();
+//    	sb.append("id: " + this.id  + "\n");
+//    	sb.append("Trade Date: " + this.tradeDate  + "\n");
+//    	sb.append("Commodity Type: " + this.commodityType  + "\n");
+//    	sb.append("Quantity: " + this.quantity  + "\n");
+//    	sb.append("Price: " + this.price  + "\n");
+//    	sb.append("Counterparty: " + this.counterparty  + "\n");
+//
+//    	String summary = sb.toString();
+//    	
+//    	return summary;
+//    }
+//    
+//    @Override
+//    public String toString() {
+//        return "Trade{" +
+//                "id=" + id +
+//                ", tradeDate='" + tradeDate + '\'' +
+//                ", commodityType='" + commodityType + '\'' +
+//                ", quantity=" + quantity +
+//                ", price=" + price +
+//                ", counterparty='" + counterparty + '\'' +
+//                '}';
+//    }
 }
