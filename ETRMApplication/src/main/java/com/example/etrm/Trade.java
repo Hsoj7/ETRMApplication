@@ -147,6 +147,13 @@ public class Trade {
     }
     
     /**
+     * Gets the id
+     */
+    public int getId() {
+        return id;
+    }
+    
+    /**
      * Gets the trade date
      */
     public String getTradeDate() {
