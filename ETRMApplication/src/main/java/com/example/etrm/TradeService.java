@@ -127,8 +127,47 @@ public class TradeService {
 //        return mostRecentTrade;
 //    }
     
-    
 
+    /**
+     * Gets the highest ID SpotTrade
+     * @return	the SpotTrade object representing the highest ID row
+     */
+    public SpotTrade getRecentSpotTrade() {
+        try (Session session = sessionFactory.openSession()) {
+            // Using native SQL to get the most recent SpotTrade
+            NativeQuery<SpotTrade> query = session.createNativeQuery(
+                "SELECT * FROM spot_trades st " +
+                "JOIN trades t ON st.id = t.id " +
+                "ORDER BY st.id DESC", SpotTrade.class
+            );
+            query.setMaxResults(1);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /**
+     * Gets the highest ID FuturesTrade
+     * @return	the FuturesTrade object representing the highest ID row
+     */
+    public FuturesTrade getRecentFuturesTrade() {
+        try (Session session = sessionFactory.openSession()) {
+            // Using native SQL to get the most recent FuturesTrade
+            NativeQuery<FuturesTrade> query = session.createNativeQuery(
+                "SELECT * FROM futures_trades ft " +
+                "JOIN trades t ON ft.id = t.id " +
+                "ORDER BY ft.id DESC", FuturesTrade.class
+            );
+            query.setMaxResults(1);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     /**
      * Returns a list of all trades from the database
      * This will include both spot trades and futures trades, ordered by ID ASC
@@ -140,7 +179,7 @@ public class TradeService {
     }
     
     /**
-     * Returns a list of all spot trades from the database
+     * Returns a list of all spots trades from the database
      */
     public List<SpotTrade> getAllSpotTrades() {
         try (Session session = sessionFactory.openSession()) {
@@ -149,7 +188,7 @@ public class TradeService {
     }
     
     /**
-     * Returns a list of all futures trades from the database
+     * Returns a list of all trades from the database
      */
     public List<FuturesTrade> getAllFuturesTrades() {
         try (Session session = sessionFactory.openSession()) {

@@ -1,22 +1,36 @@
 package com.example.etrm;
 
+import java.text.NumberFormat;
 import java.util.List;
 
+// to do:
+// update JUnits for each class
 
-// Next add JUnit testing
 public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("Establishing Connection...");
 		TradeService ts = new TradeService();
 		System.out.println("Connected.");
+
 		
+//		TESTING VALUATIONSERVICE
+		ValuationService vs = new ValuationService();
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+
+		SpotTrade st = ts.getRecentSpotTrade();
+		System.out.println("Spot contract: " + st.toString());
+		double spotValue = vs.valueSpotTrade(st);
+        String formatted = currencyFormatter.format(spotValue);
+		System.out.println("Spot value: " + formatted);
 		
-//		then implement ValuationService
-//		then add a bunch of fake data
+		FuturesTrade ft = ts.getRecentFuturesTrade();
+		System.out.println("Futures contract: " + ft.toString());
+		double futuresValue = vs.valueFuturesTrade(ft);
+		formatted = currencyFormatter.format(futuresValue);
+		System.out.println("Futures value: " + formatted);
 		
-		
-		
+
 //		TESTING DELETE works for both spot and futures
 //		ts.deleteTrade(6);
 		
