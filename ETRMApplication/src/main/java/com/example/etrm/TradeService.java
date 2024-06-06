@@ -126,13 +126,34 @@ public class TradeService {
 //
 //        return mostRecentTrade;
 //    }
+    
+    
 
     /**
      * Returns a list of all trades from the database
+     * This will include both spot trades and futures trades, ordered by ID ASC
      */
     public List<Trade> getAllTrades() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Trade", Trade.class).list();
+        }
+    }
+    
+    /**
+     * Returns a list of all spot trades from the database
+     */
+    public List<SpotTrade> getAllSpotTrades() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from SpotTrade", SpotTrade.class).list();
+        }
+    }
+    
+    /**
+     * Returns a list of all futures trades from the database
+     */
+    public List<FuturesTrade> getAllFuturesTrades() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from FuturesTrade", FuturesTrade.class).list();
         }
     }
 

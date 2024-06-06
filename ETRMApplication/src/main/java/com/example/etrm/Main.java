@@ -12,16 +12,48 @@ public class Main {
 		System.out.println("Connected.");
 		
 		
-//		finish getAllTrades(), updateTrade(), deleteTrade()
 //		then implement ValuationService
 //		then add a bunch of fake data
 		
-//		TESTING GET MOST RECENT TRADE FOR SPOT AND FUTURES
-		Trade trade = ts.getMostRecentTrade();
-		System.out.println(trade.toString());
 		
 		
-//		TESTING GET TRADES FOR SPOT AND FUTURES
+//		TESTING DELETE works for both spot and futures
+//		ts.deleteTrade(6);
+		
+//		TESTING GET only spot trades and futures trades
+//		SpotTrade spot = ts.getSpotTrade(1);
+//		System.out.println(spot.toString());
+//		spot.setTradeDate("2023-06-06");
+//		ts.updateTrade(spot);
+//		
+//		FuturesTrade future = ts.getFuturesTrade(2);
+//		System.out.println(future.toString());
+//		future.setTradeDate("2023-06-06");
+//		ts.updateTrade(future);
+		
+		
+		
+//		TESTING GET ALL TRADES for spot and futures
+//		List<Trade> trades = ts.getAllTrades();
+//        System.out.println("All Trades:");
+//        for(Trade trade : trades) {
+//        	System.out.println(trade.toString());
+//        }
+//        
+//        List<SpotTrade> spots = ts.getAllSpotTrades();
+//        System.out.println("All Spot Trades:");
+//        for(SpotTrade spot : spots) {
+//        	System.out.println(spot.toString());
+//        }
+//        
+//        List<FuturesTrade> futures = ts.getAllFuturesTrades();
+//        System.out.println("All Futures Trades:");
+//        for(FuturesTrade future : futures) {
+//        	System.out.println(future.toString());
+//        }
+		
+		
+//		TESTING GET TRADES for spot and futures
 //		SpotTrade spot = ts.getSpotTrade(1);
 //		System.out.println(spot.toString());
 //		
@@ -29,56 +61,14 @@ public class Main {
 //		System.out.println(spot.toString());
 		
 		
-//		TESTING SAVE FOR SPOT AND FUTURES
+//		TESTING SAVE for spot and futures
 //        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-05", "Oil", "Counterparty A", 72.23, 325);
 //        ts.saveTrade(spotTrade);
 //        FuturesTrade futuresTrade = new FuturesTrade(TradeType.FUTURES, "2023-06-05", "Petroleum", "Counterparty B", 80.0, 750, 0.05, 30);
 //        ts.saveTrade(futuresTrade);
 
 
-		
-		
-//		TESTING saveTrade()
-//		Trade trade2 = new Trade("2024-06-05", "Gas", 671, 72.10, "My Company", TradeType.SPOT, 0, 0);
-//		ts.saveTrade(trade2);
-//		Trade retrieved = ts.getMostRecentTrade();
-//		System.out.println("Trade2:");
-//		System.out.println(retrieved.toString());
-		
-		
-
-//		TESTING getAllTrades()
-//		List<Trade> trades = ts.getAllTrades();
-//		
-//		int startIndex = Math.max(0, trades.size() - 10);
-//        List<Trade> lastTen = trades.subList(startIndex, trades.size());
-//        
-//        for(Trade trade : lastTen) {
-//        	System.out.println(trade);
-//        }
-		
-		
-//		TESTING deleteTrade()
-//		int tradeid = 6;
-//		ts.deleteTrade(tradeid);
-		
-		
-//		TESTING updateTrade()
-//		Trade trade = ts.getTrade(186);
-//		trade.setCommodityType("Electricity");
-//		ts.updateTrade(trade);
-		
-
-//		TESTING getTrade()
-//		int tradeid = 26;
-//		Trade trade = ts.getTrade(tradeid);
-//	
-//		System.out.println("Trade " + tradeid + ":");
-//		System.out.println(trade.toString());
-		
-		
-
-				
+						
 		ts.close();
 		System.out.println("Program terminated");
 	}
