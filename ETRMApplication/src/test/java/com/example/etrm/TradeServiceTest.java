@@ -3,7 +3,6 @@ package com.example.etrm;
 import static org.junit.Assert.*;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,63 +28,124 @@ public class TradeServiceTest {
 
     @Test
     public void testSaveTrade() {
-        Trade trade = new Trade("2023-01-01", "Gas", 1500, 100.0, "Test Company");
-        tradeService.saveTrade(trade);
+        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+        tradeService.saveTrade(spotTrade);
 
-        Trade retrievedTrade = tradeService.getTrade(trade.getId());
-        assertNotNull(retrievedTrade);
-        assertEquals("2023-01-01", retrievedTrade.getTradeDate());
-        assertEquals("Gas", retrievedTrade.getCommodityType());
-        assertEquals(1500, retrievedTrade.getQuantity(), 0.01);
-        assertEquals(100.0, retrievedTrade.getPrice(), 0.01);
-        assertEquals("Test Company", retrievedTrade.getCounterparty());
+        Trade savedTrade = tradeService.getTrade(spotTrade.getId());
+        assertNotNull(savedTrade);
+        assertEquals("SPOT", savedTrade.getTradeType().toString());
+        assertEquals("2023-06-01", savedTrade.getTradeDate());
+        assertEquals("Oil", savedTrade.getCommodityType());
+        assertEquals("Counterparty A", savedTrade.getCounterparty());
     }
 
     @Test
-    public void testGetTrade() {
-        Trade trade = new Trade("2023-01-01", "Oil", 50, 76.25, "Counterparty B");
-        tradeService.saveTrade(trade);
+    public void testGetSpotTrade() {
+        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+        tradeService.saveTrade(spotTrade);
 
-        Trade retrievedTrade = tradeService.getTrade(trade.getId());
-        assertNotNull(retrievedTrade);
-        assertEquals("2023-01-01", retrievedTrade.getTradeDate());
-        assertEquals("Oil", retrievedTrade.getCommodityType());
-        assertEquals(50, retrievedTrade.getQuantity(), 0.01);
-        assertEquals(76.25, retrievedTrade.getPrice(), 0.01);
-        assertEquals("Counterparty B", retrievedTrade.getCounterparty());
+        SpotTrade fetchedSpotTrade = tradeService.getSpotTrade(spotTrade.getId());
+        assertNotNull(fetchedSpotTrade);
+        assertEquals(75.0, fetchedSpotTrade.getPrice(), 0.0);
+        assertEquals(1000, fetchedSpotTrade.getQuantity());
+    }
+
+    @Test
+    public void testGetFuturesTrade() {
+        FuturesTrade futuresTrade = new FuturesTrade(TradeType.FUTURES, "2023-06-02", "Gold", "Counterparty B", 1200.0, 500, 0.05, 30);
+        tradeService.saveTrade(futuresTrade);
+
+        FuturesTrade fetchedFuturesTrade = tradeService.getFuturesTrade(futuresTrade.getId());
+        assertNotNull(fetchedFuturesTrade);
+        assertEquals(1200.0, fetchedFuturesTrade.getPrice(), 0.0);
+        assertEquals(500, fetchedFuturesTrade.getQuantity());
+        assertEquals(0.05, fetchedFuturesTrade.getDiscountRate(), 0.0);
+        assertEquals(30, fetchedFuturesTrade.getDaysToSettlement());
     }
 
     @Test
     public void testGetAllTrades() {
-        tradeService.saveTrade(new Trade("2023-01-01", "Oil", 100, 80.50, "Counterparty A"));
-        tradeService.saveTrade(new Trade("2023-01-02", "Electricity", 15.10, 401.25, "Counterparty B"));
+        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+        FuturesTrade futuresTrade = new FuturesTrade(TradeType.FUTURES, "2023-06-02", "Gold", "Counterparty B", 1200.0, 500, 0.05, 30);
 
-        List<Trade> trades = tradeService.getAllTrades();
-        assertNotNull(trades);
-        assertTrue(trades.size() >= 2);
+        tradeService.saveTrade(spotTrade);
+        tradeService.saveTrade(futuresTrade);
+
+        List<Trade> allTrades = tradeService.getAllTrades();
+        assertEquals(2, allTrades.size());
+    }
+
+    @Test
+    public void testGetAllSpotTrades() {
+        SpotTrade spotTrade1 = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+        SpotTrade spotTrade2 = new SpotTrade(TradeType.SPOT, "2023-06-02", "Silver", "Counterparty C", 50.0, 2000);
+
+        tradeService.saveTrade(spotTrade1);
+        tradeService.saveTrade(spotTrade2);
+
+        List<SpotTrade> allSpotTrades = tradeService.getAllSpotTrades();
+        assertEquals(2, allSpotTrades.size());
+    }
+
+    @Test
+    public void testGetAllFuturesTrades() {
+        FuturesTrade futuresTrade1 = new FuturesTrade(TradeType.FUTURES, "2023-06-02", "Gold", "Counterparty B", 1200.0, 500, 0.05, 30);
+        FuturesTrade futuresTrade2 = new FuturesTrade(TradeType.FUTURES, "2023-06-03", "Platinum", "Counterparty D", 1500.0, 300, 0.04, 60);
+
+        tradeService.saveTrade(futuresTrade1);
+        tradeService.saveTrade(futuresTrade2);
+
+        List<FuturesTrade> allFuturesTrades = tradeService.getAllFuturesTrades();
+        assertEquals(2, allFuturesTrades.size());
     }
 
     @Test
     public void testUpdateTrade() {
-        Trade trade = new Trade("2023-01-01", "Plutonium", 10, 950.75, "Counterparty C");
-        tradeService.saveTrade(trade);
+        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+        tradeService.saveTrade(spotTrade);
 
-        trade.setPrice(1050.00);
-        tradeService.updateTrade(trade);
+        spotTrade.setPrice(80.0);
+        tradeService.updateTrade(spotTrade);
 
-        Trade updatedTrade = tradeService.getTrade(trade.getId());
-        assertNotNull(updatedTrade);
-        assertEquals(1050.00, updatedTrade.getPrice(), 0.01);
+        SpotTrade updatedSpotTrade = tradeService.getSpotTrade(spotTrade.getId());
+        assertNotNull(updatedSpotTrade);
+        assertEquals(80.0, updatedSpotTrade.getPrice(), 0.0);
     }
 
     @Test
     public void testDeleteTrade() {
-        Trade trade = new Trade("2023-01-01", "Plutonium", 5, 1526.50, "Counterparty D");
-        tradeService.saveTrade(trade);
+        SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+        tradeService.saveTrade(spotTrade);
 
-        tradeService.deleteTrade(trade.getId());
+        tradeService.deleteTrade(spotTrade.getId());
 
-        Trade deletedTrade = tradeService.getTrade(trade.getId());
-        assertNull(deletedTrade);
+        SpotTrade deletedSpotTrade = tradeService.getSpotTrade(spotTrade.getId());
+        assertNull(deletedSpotTrade);
+    }
+
+    @Test
+    public void testGetRecentSpotTrade() {
+        SpotTrade spotTrade1 = new SpotTrade(TradeType.SPOT, "2023-06-01", "Oil", "Counterparty A", 75.0, 1000);
+        SpotTrade spotTrade2 = new SpotTrade(TradeType.SPOT, "2023-06-02", "Silver", "Counterparty C", 50.0, 2000);
+
+        tradeService.saveTrade(spotTrade1);
+        tradeService.saveTrade(spotTrade2);
+
+        SpotTrade recentSpotTrade = tradeService.getRecentSpotTrade();
+        assertNotNull(recentSpotTrade);
+        assertEquals("Silver", recentSpotTrade.getCommodityType());
+    }
+
+    @Test
+    public void testGetRecentFuturesTrade() {
+        FuturesTrade futuresTrade1 = new FuturesTrade(TradeType.FUTURES, "2023-06-02", "Gold", "Counterparty B", 1200.0, 500, 0.05, 30);
+        FuturesTrade futuresTrade2 = new FuturesTrade(TradeType.FUTURES, "2023-06-03", "Platinum", "Counterparty D", 1500.0, 300, 0.04, 60);
+
+        tradeService.saveTrade(futuresTrade1);
+        tradeService.saveTrade(futuresTrade2);
+
+        FuturesTrade recentFuturesTrade = tradeService.getRecentFuturesTrade();
+        assertNotNull(recentFuturesTrade);
+        assertEquals("Platinum", recentFuturesTrade.getCommodityType());
     }
 }

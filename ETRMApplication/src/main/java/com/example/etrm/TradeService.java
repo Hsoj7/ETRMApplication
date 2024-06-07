@@ -5,8 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 
-import com.mysql.cj.Query;
-
 import java.util.List;
 
 /**

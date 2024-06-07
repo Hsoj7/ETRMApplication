@@ -5,7 +5,7 @@ import java.util.List;
 
 // to do:
 // update JUnits for each class
-
+// make a class for insert fake data
 public class Main {
 
 	public static void main(String[] args) {
