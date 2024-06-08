@@ -82,49 +82,7 @@ public class TradeService {
         try (Session session = sessionFactory.openSession()) {
             return session.get(FuturesTrade.class, id);
         }
-    }
-
-    
-    /**
-     * Gets the most recently inserted trade from the db
-     * @return	the Trade object representing the row most recently inserted
-     * Not working since updating structure to trades as parent table and spot_trades/futures_trades as children
-     */
-//    public Trade getMostRecentTrade() {
-//        Trade mostRecentTrade = null;
-//
-//        try (Session session = sessionFactory.openSession()) {
-//            // Start the transaction
-//            Transaction transaction = session.beginTransaction();
-//
-//            try {
-//                // Get the last inserted ID
-//                NativeQuery<Integer> idQuery = session.createNativeQuery("SELECT LAST_INSERT_ID()");
-//                System.out.println(idQuery.uniqueResult());
-////                casting 
-//                Integer lastInsertedId = ((Number) idQuery.uniqueResult()).intValue();
-//
-//                if (lastInsertedId != null) {
-//                    // Retrieve the trade with the last inserted ID using the existing method
-//                    mostRecentTrade = getTrade(lastInsertedId);
-//                }
-//
-//                // Commit the transaction
-//                transaction.commit();
-//            } catch (Exception e) {
-//                // Rollback the transaction in case of an error
-//                if (transaction != null) {
-//                    transaction.rollback();
-//                }
-//                throw e;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return mostRecentTrade;
-//    }
-    
+    }    
 
     /**
      * Gets the highest ID SpotTrade
@@ -229,6 +187,34 @@ public class TradeService {
                 System.out.println("Trade not found.");
             }
             transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Deletes ALL entries in the spot_trades, futures_trades, and trades tables
+     */
+    public void clearAllTrades() {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            // Delete all entries from spot_trades and futures_trades first to maintain referential integrity
+            NativeQuery<?> deleteSpotTradesQuery = session.createNativeQuery("DELETE FROM spot_trades");
+            NativeQuery<?> deleteFuturesTradesQuery = session.createNativeQuery("DELETE FROM futures_trades");
+            deleteSpotTradesQuery.executeUpdate();
+            deleteFuturesTradesQuery.executeUpdate();
+
+            // Delete all entries from trades table
+            NativeQuery<?> deleteTradesQuery = session.createNativeQuery("DELETE FROM trades");
+            deleteTradesQuery.executeUpdate();
+
+            transaction.commit();
+            System.out.println("All trades cleared");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();

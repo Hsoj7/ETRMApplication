@@ -24,7 +24,7 @@ public class FuturesTrade extends Trade {
     	
     }
 
-    public FuturesTrade(TradeType tradeType, String tradeDate, String commodityType, String counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
+    public FuturesTrade(TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
         super(tradeType, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
@@ -32,7 +32,7 @@ public class FuturesTrade extends Trade {
         this.daysToSettlement = daysToSettlement;
     }
     
-    public FuturesTrade(int id, TradeType tradeType, String tradeDate, String commodityType, String counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
+    public FuturesTrade(int id, TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
         super(id, tradeType, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
@@ -80,7 +80,7 @@ public class FuturesTrade extends Trade {
                 ", tradeType='" + this.getTradeType() + '\'' +
                 ", tradeDate='" + this.getTradeDate() + '\'' +
                 ", commodityType='" + this.getCommodityType() + '\'' +
-                ", counterparty='" + this.getCounterparty() + '\'' +
+                ", counterparty='" + this.getCounterparty().getName() + '\'' +
                 ", quantity=" + this.quantity +
                 ", price=" + this.price +
                 ", discountRate=" + this.discountRate +

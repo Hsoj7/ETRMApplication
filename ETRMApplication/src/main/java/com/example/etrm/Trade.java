@@ -21,11 +21,13 @@ public class Trade {
 	@Column(name = "trade_date")
     private String tradeDate;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "commodity_type")
-    private String commodityType;
+    private CommodityType commodityType;
 	
-	@Column(name = "counterparty")
-    private String counterparty;
+	@ManyToOne
+    @JoinColumn(name = "counterparty_id")
+    private Counterparty counterparty;
     
     
 	/**
@@ -39,7 +41,7 @@ public class Trade {
 	/**
      * Used to construct a Trade object without an id field - used for creating new trades from the command line
      */
-	public Trade(TradeType tradeType, String tradeDate, String commodityType, String counterparty) {
+	public Trade(TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty) {
         this.tradeType = tradeType;
         this.tradeDate = tradeDate;
         this.commodityType = commodityType;
@@ -49,7 +51,7 @@ public class Trade {
 	/**
      * Used to construct a Trade object with an id field - used for reading from the db
      */
-	public Trade(int id, TradeType tradeType, String tradeDate, String commodityType, String counterparty) {
+	public Trade(int id, TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty) {
         this.id = id;
 		this.tradeType = tradeType;
         this.tradeDate = tradeDate;
@@ -67,14 +69,14 @@ public class Trade {
     /**
      * Sets a new commodity type
      */
-    public void setCommodityType(String commodity){
+    public void setCommodityType(CommodityType commodity){
     	this.commodityType = commodity;
     }
     
     /**
      * Sets a new counterparty
      */
-    public void setCounterparty(String counterparty) {
+    public void setCounterparty(Counterparty counterparty) {
         this.counterparty = counterparty;
     }
     
@@ -102,14 +104,14 @@ public class Trade {
     /**
      * Gets the commodity type
      */
-    public String getCommodityType() {
+    public CommodityType getCommodityType() {
         return commodityType;
     }
 
     /**
      * Gets the counterparty
      */
-    public String getCounterparty() {
+    public Counterparty getCounterparty() {
         return counterparty;
     }
     
@@ -127,7 +129,7 @@ public class Trade {
                 ", tradeType='" + tradeType + '\'' +
                 ", tradeDate='" + tradeDate + '\'' +
                 ", commodityType='" + commodityType + '\'' +
-                ", counterparty='" + counterparty + '\'' +
+                ", counterparty='" + counterparty.getName() + '\'' +
                 '}';
     }
 }

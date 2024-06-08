@@ -18,13 +18,13 @@ public class SpotTrade extends Trade {
     	
     }
 
-    public SpotTrade(TradeType tradeType, String tradeDate, String commodityType, String counterparty, double price, int quantity) {
+    public SpotTrade(TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity) {
         super(tradeType, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
     }
 
-    public SpotTrade(int id, TradeType tradeType, String tradeDate, String commodityType, String counterparty, double price, int quantity) {
+    public SpotTrade(int id, TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity) {
         super(id, tradeType, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
@@ -54,7 +54,7 @@ public class SpotTrade extends Trade {
               ", tradeType='" + this.getTradeType() + '\'' +
               ", tradeDate='" + this.getTradeDate() + '\'' +
               ", commodityType='" + this.getCommodityType() + '\'' +
-              ", counterparty='" + this.getCounterparty() + '\'' +
+              ", counterparty='" + this.getCounterparty().getName() + '\'' +
               ", quantity=" + this.quantity +
               ", price=" + this.price +
               '}';

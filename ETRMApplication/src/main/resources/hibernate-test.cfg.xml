@@ -26,5 +26,6 @@
         <mapping class="com.example.etrm.Trade"/>
         <mapping class="com.example.etrm.SpotTrade"/>
         <mapping class="com.example.etrm.FuturesTrade"/>
+        <mapping class="com.example.etrm.Counterparty"/>
     </session-factory>
 </hibernate-configuration>

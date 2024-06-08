@@ -12,11 +12,11 @@ public class Main {
 		System.out.println("Establishing Connection...");
 		TradeService ts = new TradeService();
 		System.out.println("Connected.");
-
-//		TESTING DATABASE POPULATION
-//		DataPopulationService dps = new DataPopulationService();
-//		dps.populateDatabase(5, 5);
+//		ts.clearAllTrades();
 		
+//		TESTING DATABASE POPULATION
+		DataPopulationService dps = new DataPopulationService();
+		dps.populateDatabase(50, 50);
 		
 		
 //		TESTING VALUATIONSERVICE

@@ -1,35 +1,56 @@
 package com.example.etrm;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 public class DataPopulationService {
 
-    private static final String[] COMMODITY_TYPES = {"Oil", "Gas"};
-    private static final String[] COUNTERPARTIES = {"Suncor", "Cenovus", "Canadian Natural", "TC Energy"};
-
+    private CounterpartyService cs;
+    private List<Counterparty> parties;
+    Random random = new Random();
+    
     public DataPopulationService() {
-
+    	cs = new CounterpartyService();
+    	parties = cs.getAllCounterparties();
     }
 
     public void populateDatabase(int numberOfSpotTrades, int numberOfFuturesTrades) {
-        for (int i = 0; i < numberOfSpotTrades; i++) {
-            SpotTrade spotTrade = createRandomSpotTrade();
-            saveTrade(spotTrade);
-        }
+        int remainingSpotTrades = numberOfSpotTrades;
+        int remainingFuturesTrades = numberOfFuturesTrades;
 
-        for (int i = 0; i < numberOfFuturesTrades; i++) {
-            FuturesTrade futuresTrade = createRandomFuturesTrade();
-            saveTrade(futuresTrade);
+        while (remainingSpotTrades > 0 || remainingFuturesTrades > 0) {
+            if (remainingSpotTrades > 0 && remainingFuturesTrades > 0) {
+                if (random.nextBoolean()) {
+                    SpotTrade spotTrade = createRandomSpotTrade();
+                    saveTrade(spotTrade);
+                    remainingSpotTrades--;
+                } else {
+                    FuturesTrade futuresTrade = createRandomFuturesTrade();
+                    saveTrade(futuresTrade);
+                    remainingFuturesTrades--;
+                }
+            } else if (remainingSpotTrades > 0) {
+                SpotTrade spotTrade = createRandomSpotTrade();
+                saveTrade(spotTrade);
+                remainingSpotTrades--;
+            } else if (remainingFuturesTrades > 0) {
+                FuturesTrade futuresTrade = createRandomFuturesTrade();
+                saveTrade(futuresTrade);
+                remainingFuturesTrades--;
+            }
         }
     }
 
     private SpotTrade createRandomSpotTrade() {
-        Random random = new Random();
         SpotTrade spotTrade = new SpotTrade();
         spotTrade.setTradeDate(LocalDate.now().toString());
-        spotTrade.setCommodityType(COMMODITY_TYPES[random.nextInt(COMMODITY_TYPES.length)]);
-        spotTrade.setCounterparty(COUNTERPARTIES[random.nextInt(COUNTERPARTIES.length)]);
+        
+        CommodityType[] commodity = CommodityType.values();
+        int randomIndex = random.nextInt(commodity.length);
+        spotTrade.setCommodityType(commodity[randomIndex]);
+        
+        spotTrade.setCounterparty(parties.get(random.nextInt(parties.size())));
         spotTrade.setQuantity(random.nextInt(200));
         spotTrade.setPrice(random.nextInt(1000));
         spotTrade.setTradeType(TradeType.SPOT);
@@ -37,11 +58,14 @@ public class DataPopulationService {
     }
 
     private FuturesTrade createRandomFuturesTrade() {
-        Random random = new Random();
         FuturesTrade futuresTrade = new FuturesTrade();
         futuresTrade.setTradeDate(LocalDate.now().toString());
-        futuresTrade.setCommodityType(COMMODITY_TYPES[random.nextInt(COMMODITY_TYPES.length)]);
-        futuresTrade.setCounterparty(COUNTERPARTIES[random.nextInt(COUNTERPARTIES.length)]);
+        
+        CommodityType[] commodity = CommodityType.values();
+        int randomIndex = random.nextInt(commodity.length);
+        futuresTrade.setCommodityType(commodity[randomIndex]);
+        
+        futuresTrade.setCounterparty(parties.get(random.nextInt(parties.size())));
         futuresTrade.setPrice(random.nextInt(1000));
         futuresTrade.setQuantity(random.nextInt(200));
         futuresTrade.setDiscountRate(random.nextDouble() * 0.1);
