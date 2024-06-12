@@ -24,16 +24,16 @@ public class FuturesTrade extends Trade {
     	
     }
 
-    public FuturesTrade(TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
-        super(tradeType, tradeDate, commodityType, counterparty);
+    public FuturesTrade(TradeType tradeType, BuySell buySell, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
+        super(tradeType, buySell, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
         this.discountRate = discountRate;
         this.daysToSettlement = daysToSettlement;
     }
     
-    public FuturesTrade(int id, TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
-        super(id, tradeType, tradeDate, commodityType, counterparty);
+    public FuturesTrade(int id, TradeType tradeType, BuySell buySell, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity, double discountRate, int daysToSettlement) {
+        super(id, tradeType, buySell, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
         this.discountRate = discountRate;

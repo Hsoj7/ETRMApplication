@@ -9,6 +9,12 @@ import jakarta.persistence.*;
 @Table(name = "trades")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Trade {
+	
+	public enum BuySell {
+        BUY,
+        SELL
+    }
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -21,14 +27,19 @@ public class Trade {
 	@Column(name = "trade_date")
     private String tradeDate;
 	
-	@Enumerated(EnumType.STRING)
 	@Column(name = "commodity_type")
+    private String commodityTypeName;
+	
+	@Transient
     private CommodityType commodityType;
 	
 	@ManyToOne
     @JoinColumn(name = "counterparty_id")
     private Counterparty counterparty;
-    
+	
+	@Enumerated(EnumType.STRING)
+    @Column(name = "buy_sell")
+    private BuySell buySell;
     
 	/**
      * Empty constructor needed for SessionFactory class
@@ -41,21 +52,23 @@ public class Trade {
 	/**
      * Used to construct a Trade object without an id field - used for creating new trades from the command line
      */
-	public Trade(TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty) {
+	public Trade(TradeType tradeType, BuySell buySell, String tradeDate, CommodityType commodityType, Counterparty counterparty) {
         this.tradeType = tradeType;
+        this.buySell = buySell;
         this.tradeDate = tradeDate;
-        this.commodityType = commodityType;
+        this.setCommodityType(commodityType); // Update setter usage
         this.counterparty = counterparty;
     }
 	
 	/**
      * Used to construct a Trade object with an id field - used for reading from the db
      */
-	public Trade(int id, TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty) {
+	public Trade(int id, TradeType tradeType, BuySell buySell, String tradeDate, CommodityType commodityType, Counterparty counterparty) {
         this.id = id;
 		this.tradeType = tradeType;
+        this.buySell = buySell;
         this.tradeDate = tradeDate;
-        this.commodityType = commodityType;
+        this.setCommodityType(commodityType); // Update setter usage
         this.counterparty = counterparty;
     }
     
@@ -71,6 +84,7 @@ public class Trade {
      */
     public void setCommodityType(CommodityType commodity){
     	this.commodityType = commodity;
+        this.commodityTypeName = commodity.getName(); // Set the name for database storage
     }
     
     /**
@@ -88,6 +102,13 @@ public class Trade {
     }
     
     /**
+     * Sets a new BuySell
+     */
+    public void setBuySell(BuySell buySell){
+    	this.buySell = buySell;
+    }
+    
+    /**
      * Gets the id
      */
     public int getId() {
@@ -100,11 +121,21 @@ public class Trade {
     public String getTradeDate() {
         return tradeDate;
     }
+    
+    /**
+     * Gets the BuySell
+     */
+    public BuySell getBuySell(){
+    	return buySell;
+    }
 
     /**
      * Gets the commodity type
      */
     public CommodityType getCommodityType() {
+        if (commodityType == null && commodityTypeName != null) {
+            commodityType = CommodityType.getCommodityTypeByName(commodityTypeName); // Lazy load if needed
+        }
         return commodityType;
     }
 
@@ -128,7 +159,7 @@ public class Trade {
                 "id=" + id +
                 ", tradeType='" + tradeType + '\'' +
                 ", tradeDate='" + tradeDate + '\'' +
-                ", commodityType='" + commodityType + '\'' +
+                ", commodityType='" + commodityTypeName + '\'' +
                 ", counterparty='" + counterparty.getName() + '\'' +
                 '}';
     }

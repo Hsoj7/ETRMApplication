@@ -1,22 +1,30 @@
 package com.example.etrm;
 
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 // to do:
+// implement the ledger and not allow selling more than your total outstanding position
 // update JUnits for each class
-// make a class for insert fake data
+
 public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("Establishing Connection...");
 		TradeService ts = new TradeService();
 		System.out.println("Connected.");
-//		ts.clearAllTrades();
 		
-//		TESTING DATABASE POPULATION
+		
+//		CLEAR ALL TRADES
+		ts.clearAllTrades();
+		
+		
+//		TESTING DATABASE POPULATION from June 6th 2024 with max of 10 trades in a given day
+		LocalDate startDate = LocalDate.of(2024, 06, 06);
 		DataPopulationService dps = new DataPopulationService();
-		dps.populateDatabase(50, 50);
+		dps.populateDatabase(startDate, 10);
+//		dps.populateDatabase(50, 50);
 		
 		
 //		TESTING VALUATIONSERVICE

@@ -1,5 +1,7 @@
 package com.example.etrm;
 
+import com.example.etrm.Trade.BuySell;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -18,14 +20,14 @@ public class SpotTrade extends Trade {
     	
     }
 
-    public SpotTrade(TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity) {
-        super(tradeType, tradeDate, commodityType, counterparty);
+    public SpotTrade(TradeType tradeType, BuySell buySell, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity) {
+        super(tradeType, buySell, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
     }
 
-    public SpotTrade(int id, TradeType tradeType, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity) {
-        super(id, tradeType, tradeDate, commodityType, counterparty);
+    public SpotTrade(int id, TradeType tradeType, BuySell buySell, String tradeDate, CommodityType commodityType, Counterparty counterparty, double price, int quantity) {
+        super(id, tradeType, buySell, tradeDate, commodityType, counterparty);
         this.price = price;
         this.quantity = quantity;
     }
