@@ -156,6 +156,8 @@ public abstract class Trade {
     // Abstract methods to be implemented by subclasses
     public abstract int getQuantity();
     public abstract double getPrice();
+    public abstract void setQuantity(int quantity);
+    public abstract void setPrice(double price);
 
     @Override
     public String toString() {

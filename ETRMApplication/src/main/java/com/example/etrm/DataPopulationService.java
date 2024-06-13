@@ -35,11 +35,13 @@ public class DataPopulationService {
                 boolean tradeSaved = false;
                 while (!tradeSaved) {
                     try {
-                        if (random.nextBoolean()) {
-                            trade = createRandomSpotTrade(currentDate);
-                        } else {
-                            trade = createRandomFuturesTrade(currentDate);
-                        }
+//                    	saving only spot trades for now. Uncomment once ready to implement futures
+                    	trade = createRandomSpotTrade(currentDate);
+//                        if (random.nextBoolean()) {
+//                        	trade = createRandomSpotTrade(currentDate);
+//                        } else {
+//                            trade = createRandomFuturesTrade(currentDate);
+//                        }
                         ts.verifyTrade(trade);
                         ts.saveTrade(trade);
                         tradeSaved = true;

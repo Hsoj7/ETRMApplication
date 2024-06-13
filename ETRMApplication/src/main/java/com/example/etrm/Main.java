@@ -3,10 +3,12 @@ package com.example.etrm;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 import com.example.etrm.Trade.BuySell;
 
 // to do:
+// implement ReportService to calculate trade positions, and P&L on given trades
 // implement present value for futures trades in verifyTrade
 // update JUnits for each class
 
@@ -14,9 +16,34 @@ import com.example.etrm.Trade.BuySell;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("Establishing Connection...");
+		Random random = new Random();
+		System.out.println("Establishing Trade Service...");
 		TradeService ts = new TradeService();
 		System.out.println("Connected.");
+//		ts.clearAllTrades();
+
+		
+		
+		CounterpartyService cs = new CounterpartyService();
+		Counterparty counterparty = cs.getCounterparty(random.nextInt(7) + 1);
+		SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, BuySell.SELL, LocalDate.now().toString(), CommodityType.CRUDE_OIL, counterparty, 83.0, 35);
+        try {
+            ts.verifyTrade(spotTrade);
+            ts.saveTrade(spotTrade);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Trade failed: " + e.getMessage());
+        }
+		
+		
+		
+//		TESTING REPORTING SERVICE
+		System.out.println("Establishing Report Service...");
+		ReportService rs = new ReportService();
+		System.out.println("Connected.");
+//		
+		rs.printPositionSummaries();
+		rs.generateProfitAndLossReport();
+		
 		
 		
 //		TESTING POSITION LIMITS
@@ -40,7 +67,7 @@ public class Main {
 //		DataPopulationService dps = new DataPopulationService(ts);
 //		dps.populateDatabase(startDate, 10);
 //		
-//		ts.printPositionSummaries();
+//		rs.printPositionSummaries();
 		
 		
 //		TESTING DATABASE POPULATION with 50 spot and 50 futures trades that will use today's date
@@ -116,7 +143,10 @@ public class Main {
 
 
 						
-		ts.close();
+//		ts.close();
+		
+		rs.close();
+		
 		System.out.println("Program terminated");
 	}
 }

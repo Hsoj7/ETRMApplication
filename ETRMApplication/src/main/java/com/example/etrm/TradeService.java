@@ -93,32 +93,6 @@ public class TradeService {
     }
     
     /**
-     * Prints a summary of the positions in each commodity to the console.
-     */
-    public void printPositionSummaries() {
-        // Fetch all trades from the database
-        Session session = sessionFactory.openSession();
-        List<Trade> allTrades = session.createQuery("from Trade", Trade.class).getResultList();
-        session.close();
-
-        // Calculate outstanding positions
-        Map<CommodityType, Double> outstandingPositions = new HashMap<>();
-
-        for (Trade t : allTrades) {
-            double value = t.getQuantity() * t.getPrice();
-            outstandingPositions.put(t.getCommodityType(),
-                    outstandingPositions.getOrDefault(t.getCommodityType(), 0.0) +
-                    (t.getBuySell() == Trade.BuySell.BUY ? value : -value));
-        }
-
-        // Print the positions summary
-        System.out.println("Position Summary:");
-        for (Map.Entry<CommodityType, Double> entry : outstandingPositions.entrySet()) {
-            System.out.println("Commodity: " + entry.getKey().getName() + ", Position: " + entry.getValue());
-        }
-    }
-    
-    /**
      * Returns a SpotTrade from the database
      * @param id        	The id of the trade to get
      * @return SpotTrade 	The SpotTrade object representing the matching row
