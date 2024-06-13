@@ -8,17 +8,19 @@ public class DataPopulationService {
 
     private CounterpartyService cs;
     private List<Counterparty> parties;
-    private TradeService ts;
+    public TradeService ts;
     Random random = new Random();
     
-    public DataPopulationService() {
+    public DataPopulationService(TradeService ts) {
     	cs = new CounterpartyService();
     	parties = cs.getAllCounterparties();
-    	ts = new TradeService();
+    	this.ts = ts;
     }
     
     /**
      * Simulates historical trades daily from the startDate onwards. Inserts a random number from 0 to maxTradesPerDay of trades each day.
+     * Every random trade is verified against positions, buying more than stated limit, and selling more than outstanding position.
+     * If a trade doesn't pass the verification check, a new random trade is generated and verified
      * @param startDate	The date to begin inserting trades
      * @param maxTradesPerDay	The max number of possible trades on a given day. A random number from 0 to maxTradesPerDay is selected each day
      */
@@ -29,12 +31,22 @@ public class DataPopulationService {
         while (!currentDate.isAfter(today)) {
             int numberOfTrades = random.nextInt(maxTradesPerDay + 1);
             for (int i = 0; i < numberOfTrades; i++) {
-                if (random.nextBoolean()) {
-                    SpotTrade spotTrade = createRandomSpotTrade(currentDate);
-                    ts.saveTrade(spotTrade);
-                } else {
-                    FuturesTrade futuresTrade = createRandomFuturesTrade(currentDate);
-                    ts.saveTrade(futuresTrade);
+                Trade trade = null;
+                boolean tradeSaved = false;
+                while (!tradeSaved) {
+                    try {
+                        if (random.nextBoolean()) {
+                            trade = createRandomSpotTrade(currentDate);
+                        } else {
+                            trade = createRandomFuturesTrade(currentDate);
+                        }
+                        ts.verifyTrade(trade);
+                        ts.saveTrade(trade);
+                        tradeSaved = true;
+                    } catch (IllegalArgumentException e) {
+                        // Trade verification failed, create a new trade and try again
+                        System.out.println("Trade failed: " + e.getMessage());
+                    }
                 }
             }
             currentDate = currentDate.plusDays(1);
@@ -84,9 +96,7 @@ public class DataPopulationService {
         spotTrade.setBuySell(random.nextBoolean() ? Trade.BuySell.BUY : Trade.BuySell.SELL);
         spotTrade.setCounterparty(parties.get(random.nextInt(parties.size())));
         
-//        spotTrade.setQuantity(random.nextInt(200));
-//        spotTrade.setPrice(random.nextInt(1000));
-     // Calculate random quantity within 20% of targetQuantity
+        // Calculate random quantity within 20% of targetQuantity
         int targetQuantity = commodityType.getTargetQuantity();
         double quantityVariation = targetQuantity * 0.2; // 20% variation
         int quantity = targetQuantity - (int) (quantityVariation * 2 * random.nextDouble()); // -20% to +20%
@@ -114,9 +124,7 @@ public class DataPopulationService {
         futuresTrade.setBuySell(random.nextBoolean() ? Trade.BuySell.BUY : Trade.BuySell.SELL);
         futuresTrade.setCounterparty(parties.get(random.nextInt(parties.size())));
         
-//        futuresTrade.setPrice(random.nextInt(1000));
-//        futuresTrade.setQuantity(random.nextInt(200));
-     // Calculate random quantity within 20% of targetQuantity
+        // Calculate random quantity within 20% of targetQuantity
         int targetQuantity = commodityType.getTargetQuantity();
         double quantityVariation = targetQuantity * 0.2; // 20% variation
         int quantity = targetQuantity - (int) (quantityVariation * 2 * random.nextDouble()); // -20% to +20%

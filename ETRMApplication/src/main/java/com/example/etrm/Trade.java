@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "trades")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Trade {
+public abstract class Trade {
 	
 	public enum BuySell {
         BUY,
@@ -152,6 +152,10 @@ public class Trade {
     public TradeType getTradeType() {
         return tradeType;
     }
+    
+    // Abstract methods to be implemented by subclasses
+    public abstract int getQuantity();
+    public abstract double getPrice();
 
     @Override
     public String toString() {

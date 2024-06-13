@@ -22,19 +22,19 @@ public class Counterparty {
 
     @Column(name = "credit_limit")
     private double creditLimit;
-
-    @Column(name = "current_exposure")
-    private double currentExposure;
+    
+    @Column(name = "position_limits")
+    private int positionLimits;
 
     public Counterparty() {
         // Default constructor
     }
 
-    public Counterparty(String name, String creditRating, double creditLimit, double currentExposure) {
+    public Counterparty(String name, String creditRating, double creditLimit, int positionLimits) {
         this.name = name;
         this.creditRating = creditRating;
         this.creditLimit = creditLimit;
-        this.currentExposure = currentExposure;
+        this.positionLimits = positionLimits;
     }
 
     // Getters and setters
@@ -66,11 +66,11 @@ public class Counterparty {
         this.creditLimit = creditLimit;
     }
 
-    public double getCurrentExposure() {
-        return currentExposure;
+    public int getPositionLimits() {
+        return positionLimits;
     }
 
-    public void setCurrentExposure(double currentExposure) {
-        this.currentExposure = currentExposure;
+    public void setPositionLimits(int positionLimits) {
+        this.positionLimits = positionLimits;
     }
 }

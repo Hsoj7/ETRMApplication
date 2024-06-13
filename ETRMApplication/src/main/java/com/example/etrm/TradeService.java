@@ -5,7 +5,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class implements Object-Relational Mapping (ORM) CRUD operations for the trades table
@@ -48,6 +50,71 @@ public class TradeService {
             e.printStackTrace();
         } finally {
             session.close();
+        }
+    }
+    
+    /**
+     * Verifies if the trade can be saved based on position limits and outstanding positions.
+     * @param trade The trade to verify
+     */
+    public void verifyTrade(Trade trade) {
+        CommodityType commodityType = trade.getCommodityType();
+        double positionLimit = 10000.0;
+
+        // Fetch all trades from the database
+        Session session = sessionFactory.openSession();
+        List<Trade> allTrades = session.createQuery("from Trade", Trade.class).getResultList();
+        session.close();
+
+        // Calculate outstanding positions
+        Map<CommodityType, Double> outstandingPositions = new HashMap<>();
+
+        for (Trade t : allTrades) {
+            double value = t.getQuantity() * t.getPrice();
+            outstandingPositions.put(t.getCommodityType(),
+                    outstandingPositions.getOrDefault(t.getCommodityType(), 0.0) +
+                    (t.getBuySell() == Trade.BuySell.BUY ? value : -value));
+        }
+
+        double tradeValue = trade.getQuantity() * trade.getPrice();
+
+        // Check buy limit
+        if (trade.getBuySell() == Trade.BuySell.BUY) {
+            if (outstandingPositions.getOrDefault(commodityType, 0.0) + tradeValue > positionLimit) {
+                throw new IllegalArgumentException("Trade exceeds position limits for " + commodityType.getName() + ". Current position is: $" + outstandingPositions.getOrDefault(commodityType, 0.0) + ". Limit set to: " + positionLimit);
+            }
+        } 
+        // Check sell limit
+        else {
+            if (outstandingPositions.getOrDefault(commodityType, 0.0) < tradeValue) {
+                throw new IllegalArgumentException("Insufficient position to sell for " + commodityType.getName());
+            }
+        }
+    }
+    
+    /**
+     * Prints a summary of the positions in each commodity to the console.
+     */
+    public void printPositionSummaries() {
+        // Fetch all trades from the database
+        Session session = sessionFactory.openSession();
+        List<Trade> allTrades = session.createQuery("from Trade", Trade.class).getResultList();
+        session.close();
+
+        // Calculate outstanding positions
+        Map<CommodityType, Double> outstandingPositions = new HashMap<>();
+
+        for (Trade t : allTrades) {
+            double value = t.getQuantity() * t.getPrice();
+            outstandingPositions.put(t.getCommodityType(),
+                    outstandingPositions.getOrDefault(t.getCommodityType(), 0.0) +
+                    (t.getBuySell() == Trade.BuySell.BUY ? value : -value));
+        }
+
+        // Print the positions summary
+        System.out.println("Position Summary:");
+        for (Map.Entry<CommodityType, Double> entry : outstandingPositions.entrySet()) {
+            System.out.println("Commodity: " + entry.getKey().getName() + ", Position: " + entry.getValue());
         }
     }
     

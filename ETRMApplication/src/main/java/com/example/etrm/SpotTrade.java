@@ -1,7 +1,5 @@
 package com.example.etrm;
 
-import com.example.etrm.Trade.BuySell;
-
 import jakarta.persistence.*;
 
 @Entity

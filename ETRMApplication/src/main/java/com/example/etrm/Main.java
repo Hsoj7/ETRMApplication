@@ -4,10 +4,13 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.etrm.Trade.BuySell;
+
 // to do:
-// implement the ledger and not allow selling more than your total outstanding position
+// implement present value for futures trades in verifyTrade
 // update JUnits for each class
 
+ 
 public class Main {
 
 	public static void main(String[] args) {
@@ -16,14 +19,31 @@ public class Main {
 		System.out.println("Connected.");
 		
 		
-//		CLEAR ALL TRADES
-		ts.clearAllTrades();
+//		TESTING POSITION LIMITS
+//		CounterpartyService cs = new CounterpartyService();
+//		Counterparty counterparty = cs.getCounterparty(1);
+//		
+//		SpotTrade spotTrade = new SpotTrade(TradeType.SPOT, BuySell.BUY, LocalDate.now().toString(), CommodityType.ELECTRICITY, counterparty, 500.0, 100);
+//		
+//        try {
+//            ts.verifyTrade(spotTrade);
+//            ts.saveTrade(spotTrade);
+//        } catch (IllegalArgumentException e) {
+//            // Trade verification failed, create a new trade and try again
+//            System.out.println("Trade failed: " + e.getMessage());
+//        }
+        
+		
+//		TESTING DATABASE POPULATION
+//		ts.clearAllTrades();
+//		LocalDate startDate = LocalDate.of(2023, 01, 01);
+//		DataPopulationService dps = new DataPopulationService(ts);
+//		dps.populateDatabase(startDate, 10);
+//		
+//		ts.printPositionSummaries();
 		
 		
-//		TESTING DATABASE POPULATION from June 6th 2024 with max of 10 trades in a given day
-		LocalDate startDate = LocalDate.of(2024, 06, 06);
-		DataPopulationService dps = new DataPopulationService();
-		dps.populateDatabase(startDate, 10);
+//		TESTING DATABASE POPULATION with 50 spot and 50 futures trades that will use today's date
 //		dps.populateDatabase(50, 50);
 		
 		
