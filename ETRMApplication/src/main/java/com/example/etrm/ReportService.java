@@ -31,6 +31,7 @@ public class ReportService {
 	
 	/**
      * Prints a summary of the positions in each commodity to the console.
+     * ... FIX LATER average price isn't being calculated correctly.
      */
     public void printPositionSummaries() {
         // Fetch all trades from the database
@@ -85,7 +86,6 @@ public class ReportService {
     /**
      * Generates and prints a profit and loss report for each commodity.
      * 
-     * ... FIX LATER average price isn't being calculated correctly.
      */
     public void generateProfitAndLossReport() {
         // Fetch all trades from the database
