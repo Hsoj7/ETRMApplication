@@ -1,9 +1,12 @@
 package com.example.etrm;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.hibernate.Session;
@@ -29,26 +32,27 @@ public class ReportService {
         this.sessionFactory = sessionFactory;
     }
 	
-	/**
+    
+    /**
      * Prints a summary of the positions in each commodity to the console.
-     * ... FIX LATER average price isn't being calculated correctly.
      */
     public void printPositionSummaries() {
         // Fetch all trades from the database
         try (Session session = sessionFactory.openSession()) {
             List<Trade> allTrades = session.createQuery("from Trade", Trade.class).getResultList();
 
-            // Map to store cumulative quantity, price, and value for each commodity type
+            // Map to store outstanding quantities and values for each commodity type
             Map<CommodityType, PositionSummary> positionSummaries = new HashMap<>();
 
-            // Calculate outstanding positions
+            // Calculate outstanding quantities and values
             for (Trade trade : allTrades) {
                 CommodityType commodityType = trade.getCommodityType();
                 PositionSummary summary = positionSummaries.getOrDefault(commodityType, new PositionSummary());
-                
-                double tradeValue = trade.getQuantity() * trade.getPrice();
+
                 double tradeQuantity = trade.getQuantity();
-                
+                double tradePrice = trade.getPrice();
+                double tradeValue = tradeQuantity * tradePrice;
+
                 // Update the summary based on buy/sell
                 if (trade.getBuySell() == Trade.BuySell.BUY) {
                     summary.totalQuantity += tradeQuantity;
@@ -57,30 +61,27 @@ public class ReportService {
                     summary.totalQuantity -= tradeQuantity;
                     summary.totalValue -= tradeValue;
                 }
-                
-                // Update the average price (considering total quantity for simplicity)
-                if (summary.totalQuantity != 0) {
-                    summary.averagePrice = summary.totalValue / summary.totalQuantity;
-                } else {
-                    summary.averagePrice = 0;
-                }
 
                 positionSummaries.put(commodityType, summary);
             }
 
             // Print the positions summary
-            System.out.println("Position Summary:");
+            System.out.println("\nPosition Summary:");
             for (Map.Entry<CommodityType, PositionSummary> entry : positionSummaries.entrySet()) {
                 CommodityType commodityType = entry.getKey();
                 PositionSummary summary = entry.getValue();
-                System.out.println("Commodity: " + commodityType.getName() + 
-                                   ", Quantity: " + summary.totalQuantity + 
-                                   ", Average Price: " + summary.averagePrice + 
-                                   ", Value: " + summary.totalValue);
+                System.out.println("Commodity: " + commodityType.getName() +
+                                   ", Outstanding Quantity: " + summary.totalQuantity);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // Custom class to hold position summary details
+    static class PositionSummary {
+        double totalQuantity = 0;
+        double totalValue = 0;
     }
     
     /**
@@ -88,68 +89,73 @@ public class ReportService {
      * 
      */
     public void generateProfitAndLossReport() {
-        // Fetch all trades from the database
+        // fetch all trades from the database
         try (Session session = sessionFactory.openSession()) {
             List<Trade> allTrades = session.createQuery("from Trade", Trade.class).getResultList();
 
-            // Separate lists for buy and sell trades
-            List<Trade> buyTrades = new ArrayList<>();
-            List<Trade> sellTrades = new ArrayList<>();
-            buyTrades.addAll(allTrades); // Start with all trades as buys
-
-            // Map to keep track of total P&L
+            // map to store the FIFO queues of buy trades for each commodity
+            Map<CommodityType, LinkedList<Trade>> buyQueues = new HashMap<>();
+            // map to store cumulative P&L for each commodity
             Map<CommodityType, Double> profitAndLoss = new HashMap<>();
 
-            // Iterate through all trades and calculate P&L
+            // initialize the maps
             for (Trade trade : allTrades) {
-                if (trade.getBuySell() == Trade.BuySell.SELL) {
-                    sellTrades.add(trade);
-                }
+            	// initialize buyQueues with a linked list for each commodity type
+                buyQueues.putIfAbsent(trade.getCommodityType(), new LinkedList<Trade>());
+                // initialize profitAndLoss commodity type mapings with 0s
+                profitAndLoss.putIfAbsent(trade.getCommodityType(), 0.0);
             }
 
-            // Calculate P&L based on sell trades
-            for (Trade sellTrade : sellTrades) {
-                CommodityType commodityType = sellTrade.getCommodityType();
-                double sellQuantity = sellTrade.getQuantity();
-                double sellPrice = sellTrade.getPrice();
-                double remainingQuantity = sellQuantity;
+            // process each trade
+            for (Trade trade : allTrades) {
+                CommodityType commodityType = trade.getCommodityType();
+                LinkedList<Trade> queue = buyQueues.get(commodityType);
 
-                // Iterate through buy trades for this commodity
-                Iterator<Trade> buyTradeIterator = buyTrades.iterator();
-                while (buyTradeIterator.hasNext()) {
-                    Trade buyTrade = buyTradeIterator.next();
-                    if (buyTrade.getCommodityType() == commodityType) {
+                if (trade.getBuySell() == Trade.BuySell.BUY) {
+                    // add the buy trade to the queue
+                    queue.add(trade);
+                } else {
+                    // process the sell trade and calculate P&L
+                    int sellQuantity = trade.getQuantity();
+                    double sellPrice = trade.getPrice();
+
+                    // iterate through the buy queue starting with 
+                    while (sellQuantity > 0 && !queue.isEmpty()) {
+                        Trade buyTrade = queue.peek();
                         int buyQuantity = buyTrade.getQuantity();
                         double buyPrice = buyTrade.getPrice();
-                        int availableToSell = (int) Math.min(remainingQuantity, buyQuantity);
 
-                        // Calculate P&L for this trade
-                        double tradePnL = availableToSell * (sellPrice - buyPrice);
-                        profitAndLoss.put(commodityType, profitAndLoss.getOrDefault(commodityType, 0.0) + tradePnL);
+                        // case where sell is less than the outstanding position
+                        if (buyQuantity <= sellQuantity) {
+                            // calculate and remove buy trade
+                            double buyValue = buyQuantity * buyPrice;
+                            double pnl = (sellPrice - buyPrice) * buyQuantity;
+                            profitAndLoss.put(commodityType, profitAndLoss.get(commodityType) + pnl);
 
-                        // Update remaining quantity
-                        remainingQuantity -= availableToSell;
-
-                        // Update buy trade quantity or remove if fully sold
-                        if (availableToSell >= buyQuantity) {
-                            buyTradeIterator.remove();
+                            sellQuantity -= buyQuantity;
+                            queue.poll();
+                        // case where sell is more than the outstanding position
                         } else {
-                            buyTrade.setQuantity(buyQuantity - availableToSell);
-                        }
+                            // calculate and adjust remaining buy trade
+                            double buyValue = sellQuantity * buyPrice;
+                            double pnl = (sellPrice - buyPrice) * sellQuantity;
+                            profitAndLoss.put(commodityType, profitAndLoss.get(commodityType) + pnl);
 
-                        // Exit the loop if remaining quantity is 0
-                        if (remainingQuantity == 0) {
-                            break;
+                            buyTrade.setQuantity(buyQuantity - sellQuantity);
+                            sellQuantity = 0;
                         }
                     }
                 }
             }
 
-            // Print the P&L report
+            // print the P&L report
+            System.out.println("");
             System.out.println("Profit and Loss Report:");
+            NumberFormat usdFormat = NumberFormat.getCurrencyInstance(Locale.US);
             for (Map.Entry<CommodityType, Double> entry : profitAndLoss.entrySet()) {
-                System.out.println("Commodity: " + entry.getKey().getName() + ", P&L: " + entry.getValue());
+                System.out.println("Commodity: " + entry.getKey().getName() + ", P&L: " + usdFormat.format(entry.getValue()));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,10 +171,4 @@ public class ReportService {
         sessionFactory.close();
     }
     
- // Custom class to hold position summary details
-    class PositionSummary {
-        double totalQuantity = 0;
-        double averagePrice = 0;
-        double totalValue = 0;
-    }
 }
